@@ -1,7 +1,7 @@
-This is the Main Part of the docs
+This is the Humble Part of the docs
 =================================
 
-This is the main part of the documentation.
+This is the humble part of the documentation.
 
 .. toctree::
    :maxdepth: 2
