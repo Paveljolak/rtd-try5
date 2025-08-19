@@ -6,6 +6,8 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
+
+
 project = 'docs'
 copyright = '2025, pavel'
 author = 'pavel'
@@ -25,5 +27,6 @@ html_sidebars = { '**': ['localtoc.html', 'relations.html', 'sourcelink.html', '
 smv_tag_whitelist = r'^.*$'
 smv_branch_whitelist = r'^(main|jazzy|humble)$'
 smv_outputdir_format = '{ref.name}'
+
 
 
