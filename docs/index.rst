@@ -1,7 +1,7 @@
-This is the Main Part of the docs
+This is the test Part of the docs
 =================================
 
-This is the main part of the documentation.
+This is the test part of the documentation.
 
 .. toctree::
    :maxdepth: 2
