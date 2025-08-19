@@ -24,7 +24,7 @@ html_theme = 'sphinx_rtd_theme'
 html_static_path = ['_static']
 html_sidebars = { '**': ['localtoc.html', 'relations.html', 'sourcelink.html', 'searchbox.html', 'versions.html'] }
 smv_tag_whitelist = r'^.*$'
-smv_branch_whitelist = r'^(main|jazzy|humble)$'
+smv_branch_whitelist = r'^(main|jazzy|humble|test)$'
 smv_outputdir_format = '{ref.name}'
 
 
