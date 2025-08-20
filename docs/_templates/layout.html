@@ -2,9 +2,13 @@
 
 {% block sidebartitle %}
 {{ super() }}
-<div class="version-switcher">
-    <span>Version: </span>
-    <select onchange="location = this.value;">
+
+<div class="version-switcher" style="margin-top: 10px; z-index: 9999;">
+    <label for="version-select" style="color:white; display:block; margin-bottom: 4px;">
+        Version:
+    </label>
+    <select id="version-select" onchange="window.location.href=this.value"
+        style="color:black; background:white; width: 100%; max-width: 160px;">
         {% for item in versions %}
         <option value="{{ item.url }}" {% if item.name==current_version.name %}selected{% endif %}>
             {{ item.name }}
