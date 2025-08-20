@@ -2,18 +2,30 @@
 
 {% block sidebartitle %}
 {{ super() }}
-
 <div class="version-switcher" style="margin-top: 10px; z-index: 9999;">
     <label for="version-select" style="color:white; display:block; margin-bottom: 4px;">
         Version:
     </label>
     <select id="version-select" onchange="window.location.href=this.value"
         style="color:black; background:white; width: 100%; max-width: 160px;">
-        {% for item in versions %}
-        <option value="{{ item.url }}" {% if item.name==current_version.name %}selected{% endif %}>
-            {{ item.name }}
-        </option>
-        {% endfor %}
+        <option value="/humble/">humble</option>
+        <option value="/jazzy/">jazzy</option>
+        <option value="/main/">main</option>
+        <option value="/test/">test</option>
     </select>
+
+    <script>
+        const currentVersion = DOCUMENTATION_OPTIONS.VERSION;
+        const select = document.getElementById('version-select');
+        for (let option of select.options) {
+            if (option.value.replace(/\//g, '') === currentVersion) {
+                option.selected = true;
+            }
+        }
+    </script>
 </div>
+{% endblock %}
+
+{% block content %}
+{{ super() }}
 {% endblock %}
