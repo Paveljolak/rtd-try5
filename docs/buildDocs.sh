@@ -3,7 +3,7 @@ set -e  # exit on first error
 set -o pipefail
 
 DOCS_DIR="docs"
-BUILD_DIR="${DOCS_DIR}/_build/html"
+BUILD_DIR="_build/html"
 STATIC_DIR="${DOCS_DIR}/_static"
 
 # Ensure _static exists (prevents theme warnings)
