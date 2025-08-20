@@ -7,7 +7,7 @@ release = '1.0'
 import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
-extensions = ['sphinx_multiversion']
+extensions = []
 templates_path = ['_templates']
 html_baseurl = ''
 html_theme = 'sphinx_rtd_theme'
