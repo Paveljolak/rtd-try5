@@ -1,71 +1,38 @@
 #!/bin/bash
-set -ex
-################################################################################
-# File:    buildDocs.sh
-# Purpose: Build multi-version docs using sphinx-multiversion and deploy to gh-pages
-################################################################################
+set -e  # Exit on any error
+set -o pipefail
 
-pwd
-ls -lah
-export SOURCE_DATE_EPOCH=$(git log -1 --pretty=%ct)
+# Ensure Python environment has sphinx and sphinx-multiversion
+pip install --upgrade sphinx sphinx-multiversion
 
-##################
-# INSTALL DEPS #
-##################
-pip install -r required_packages.txt
-# pip install -r required_packages_versions.txt  # optional for exact versions
+DOCS_SRC="docs"
+BUILD_DIR="docs/_build"
+STATIC_DIR="${DOCS_SRC}/_static"
 
-##################
-# BUILD DOCS #
-##################
-# remove old build folder
-rm -rf docs/_build/html
+# Ensure _static exists
+mkdir -p "$STATIC_DIR"
 
-# build all versions
-sphinx-multiversion docs docs/_build/html \
-    -D smv_latest_version=main \
-    -D smv_whitelist_branches="main|humble|jazzy|test"
+# Clean previous builds
+rm -rf "$BUILD_DIR"
 
-###############################
-# DEPLOY TO GH-PAGES #
-###############################
-git config --global user.name "${GITHUB_ACTOR}"
-git config --global user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+# Build docs with sphinx-multiversion
+sphinx-multiversion "$DOCS_SRC" "$BUILD_DIR/html" \
+  --latest-version main \
+  --whitelist-branches main humble jazzy test \
+  --ignore ".*"
 
-# create temporary dir for deployment
-docroot=$(mktemp -d)
-rsync -av "docs/_build/html/" "${docroot}/"
+# Deploy to GitHub Pages
+# Configure Git if needed
+git config --global user.email "docs-bot@example.com"
+git config --global user.name "Docs Bot"
 
-pushd "${docroot}"
+# Use temporary directory for deployment
+DEPLOY_DIR=$(mktemp -d)
+git clone --branch gh-pages "https://github.com/<YOUR_USER>/<YOUR_REPO>.git" "$DEPLOY_DIR"
+rm -rf "$DEPLOY_DIR"/*
+cp -r "$BUILD_DIR/html"/* "$DEPLOY_DIR"/
 
-git init
-git remote add deploy "https://token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-
-# check if gh-pages exists remotely
-if git ls-remote --exit-code --heads deploy gh-pages; then
-    git fetch deploy gh-pages
-    git checkout gh-pages
-else
-    git checkout -b gh-pages
-fi
-
-# prevent Jekyll 404 errors for folders starting with _
-touch .nojekyll
-
-cat > README.md <<EOF
-# GitHub Pages Cache
-
-Multi-version documentation built with sphinx-multiversion.
-
-EOF
-
-git add .
-
-msg="Updating multi-version docs for commit ${GITHUB_SHA} made on $(date -d "@${SOURCE_DATE_EPOCH}" --iso-8601=seconds) from ${GITHUB_REF} by ${GITHUB_ACTOR}"
-git commit -am "${msg}"
-
-# push to gh-pages branch
-git push deploy gh-pages --force-with-lease
-
-popd
-exit 0
+cd "$DEPLOY_DIR"
+git add --all
+git commit -m "Update docs [ci skip]" || true  # Avoid error if no changes
+git push origin gh-pages --force
