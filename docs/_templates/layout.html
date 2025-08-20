@@ -6,13 +6,14 @@
     <label for="version-select" style="color:white; display:block; margin-bottom: 4px;">
         Version:
     </label>
-    <select id="version-select" onchange="window.location.href=this.value"
-        style="color:black; background:white; width: 100%; max-width: 160px;">
-        <option value="/humble/">humble</option>
-        <option value="/jazzy/">jazzy</option>
-        <option value="/main/">main</option>
-        <option value="/test/">test</option>
+    {% set current_version = smv_current_version() %}
+    <select id="version-select" onchange="window.location.href=this.value">
+        <option value="/humble/" {% if current_version=='humble' %}selected{% endif %}>humble</option>
+        <option value="/jazzy/" {% if current_version=='jazzy' %}selected{% endif %}>jazzy</option>
+        <option value="/main/" {% if current_version=='main' %}selected{% endif %}>main</option>
+        <option value="/test/" {% if current_version=='test' %}selected{% endif %}>test</option>
     </select>
+
 
     <script>
         const currentVersion = DOCUMENTATION_OPTIONS.VERSION;
